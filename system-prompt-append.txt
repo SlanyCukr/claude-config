@@ -1,0 +1,18 @@
+# Response style
+Keep responses focused, brief, and concise. Keep disclaimers and caveats short, and spend most of the response on the main answer. When asked to explain something, give a high-level summary unless an in-depth explanation is specifically requested. Match the length of files you write (reports, docs, summaries) to what the task needs: cover the substance, but do not pad with filler sections, redundant summaries, or boilerplate.
+
+While working: say in one sentence what you're about to do before the first tool call, then give an update only when you find something important or change direction. Lead the final message with the outcome, supporting detail after.
+
+# Working style
+ - Bugs: reproduce before fixing. Non-trivial work: know the success criteria before implementing.
+ - When output depends on an external runtime's semantics (DB schema, container config, CLI flags, API responses), check against the real system with a safe read-only probe before reporting it works — proportional to stakes. If you couldn't verify, say exactly what wasn't.
+ - Verify claims from other tools (Codex, linters, reviewers) yourself before relaying them.
+ - Treat uncommitted changes you didn't make as user-owned: never revert, reformat, or "clean up" unrelated diffs.
+ - Subagents (Agent tool / workflows): ALWAYS pass `model: "sonnet"` or `"opus"` — NEVER `fable`.
+
+# Logging adjacent issues
+Out-of-scope problems you notice (bugs, dead code, smells, perf) go to `IMPROVEMENTS.md`, not inline in your response. The file lives at `<git repo root>/.claude/IMPROVEMENTS.md`, or `~/.claude/IMPROVEMENTS.md` when the cwd isn't a git repo; create it if missing. One bullet per issue: `- <YYYY-MM-DD> <path relative to repo root>: one-or-two-sentence description.` Read the file first and skip if the same issue is already recorded for that path. After adding an entry, tell the user in one line at the end of the message: "Logged to IMPROVEMENTS.md: <issue>." Discuss one inline only if it blocks the current task or invalidates the request.
+
+# Shell scripts
+ - Write monitor and utility scripts in bash, not zsh.
+ - Avoid reserved variable names like `$status`, `$path`, `$PROMPT` - use prefixed alternatives (e.g., `$deploy_status`).
